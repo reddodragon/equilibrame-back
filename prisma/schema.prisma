@@ -1,0 +1,241 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth & Users ───────────────────────────────────
+
+enum UserRole {
+  USER
+  ENTREPRENEUR
+  ADMIN
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}
+
+model User {
+  id               String       @id @default(cuid())
+  email            String       @unique
+  passwordHash     String?      // null for Google-only users
+  firstName        String?
+  lastName         String?
+  phone            String?
+  role             UserRole     @default(USER)
+  provider         AuthProvider @default(LOCAL)
+  googleId         String?      @unique
+  avatarUrl        String?
+  isActive         Boolean      @default(true)
+  isEmailVerified  Boolean      @default(false)
+  refreshTokenHash String?      // hashed refresh token for rotation
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // Relations
+  addresses     Address[]
+
+  @@index([email])
+  @@index([googleId])
+}
+
+// ─── Products ───────────────────────────────────────
+
+enum OlfactoryFamily {
+  FLORAL
+  AMADERADO
+  CITRICO
+  DULCE
+  FRUTAL
+  FRESCO
+  HERBAL
+  ESPECIADO
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  slug            String          @unique
+  description     String?
+  olfactoryFamily OlfactoryFamily?
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id])
+  isFeatured      Boolean         @default(false)
+  isBestSeller    Boolean         @default(false)
+  isActive        Boolean         @default(true)
+  variants        ProductVariant[]
+  images          ProductImage[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([olfactoryFamily])
+}
+
+model ProductVariant {
+  id                String      @id @default(cuid())
+  productId         String
+  product           Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  format            String      // "100ml", "250ml"
+  price             Decimal     @db.Decimal(10, 2)
+  priceEntrepreneur Decimal?    @db.Decimal(10, 2)
+  priceWholesale    Decimal?    @db.Decimal(10, 2)
+  stock             Int         @default(0)
+  sku               String?     @unique
+  isActive          Boolean     @default(true)
+  comboItems        ComboItem[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([productId])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+// ─── Shipping ───────────────────────────────────────
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String?  // "Casa", "Trabajo"
+  street     String
+  number     String
+  floor      String?
+  apartment  String?
+  city       String
+  state      String   // provincia
+  postalCode String
+  country    String   @default("AR")
+  phone      String?
+  notes      String?  // indicaciones para el delivery
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ShippingZone {
+  id          String         @id @default(cuid())
+  name        String         @unique  // "CABA", "GBA Norte", "Interior"
+  description String?
+  isActive    Boolean        @default(true)
+  rates       ShippingRate[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ShippingMethod {
+  id            String         @id @default(cuid())
+  name          String         @unique  // "Envío estándar", "Express", "Retiro en local"
+  description   String?
+  estimatedDays String?        // "3-5 días hábiles"
+  isActive      Boolean        @default(true)
+  rates         ShippingRate[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model ShippingRate {
+  id             String         @id @default(cuid())
+  zoneId         String
+  zone           ShippingZone   @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  methodId       String
+  method         ShippingMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
+  price          Decimal        @db.Decimal(10, 2)
+  freeAbove      Decimal?       @db.Decimal(10, 2)
+  minOrderAmount Decimal?       @db.Decimal(10, 2)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([zoneId, methodId])
+  @@index([zoneId])
+  @@index([methodId])
+}
+
+// ─── Secciones & Combos (audience-targeted) ─────────
+
+enum SectionAudience {
+  ALL
+  ENTREPRENEUR
+  ADMIN
+}
+
+model FeaturedSection {
+  id        String          @id @default(cuid())
+  title     String
+  subtitle  String?
+  slug      String          @unique  // "productos-destacados", "combos-emprendedores"
+  audience  SectionAudience @default(ALL)
+  sortOrder Int             @default(0)
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([audience])
+}
+
+model Combo {
+  id            String          @id @default(cuid())
+  name          String
+  slug          String          @unique
+  description   String?
+  price         Decimal         @db.Decimal(10, 2)
+  originalPrice Decimal         @db.Decimal(10, 2)
+  imageUrl      String?
+  audience      SectionAudience @default(ENTREPRENEUR)
+  isFeatured    Boolean         @default(false)
+  isActive      Boolean         @default(true)
+  items         ComboItem[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([slug])
+  @@index([audience])
+}
+
+model ComboItem {
+  id        String         @id @default(cuid())
+  comboId   String
+  combo     Combo          @relation(fields: [comboId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  quantity  Int            @default(1)
+
+  @@unique([comboId, variantId])
+  @@index([comboId])
+}
