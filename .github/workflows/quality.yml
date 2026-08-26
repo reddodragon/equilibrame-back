@@ -25,5 +25,6 @@ jobs:
       - run: npx prisma generate
       - run: npm run lint
       - run: npm test -- --runInBand
+      - run: npm run test:e2e -- --runInBand
       - run: npx tsc --noEmit
       - run: npx prisma validate
