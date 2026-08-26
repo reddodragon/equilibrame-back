@@ -13,6 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { randomUUID } from 'node:crypto';
+import { Throttle } from '@nestjs/throttler';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../../generated/prisma/enums';
@@ -60,6 +61,7 @@ export class FairsController {
   }
 
   @Roles(UserRole.ADMIN)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {

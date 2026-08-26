@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import { join } from 'path';
 import fs from 'fs';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { validationPipe } from './common/pipes/validation.pipe';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -13,6 +14,12 @@ import { getCorsConfig } from './config/cors.config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
 
   // Set global prefix to /api
   app.setGlobalPrefix('api');
