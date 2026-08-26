@@ -69,7 +69,7 @@ describe('FairsService', () => {
   it('checks existence before deleting', async () => {
     const { prisma, service } = createService();
 
-    await expect(service.remove('fair-1')).resolves.toEqual({ success: true });
+    await expect(service.remove('fair-1')).resolves.toBeUndefined();
     expect(prisma.fair.delete).toHaveBeenCalledWith({
       where: { id: 'fair-1' },
     });

@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -46,6 +48,7 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   login(
     @Req() request: LocalAuthRequest,
     @Body() loginDto: LoginDto,
@@ -59,6 +62,7 @@ export class AuthController {
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   refresh(
     @Req() request: Request,
     @CurrentUser() user: AuthenticatedUser,
@@ -78,6 +82,7 @@ export class AuthController {
   @Public()
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   logout(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,

@@ -37,11 +37,10 @@ export class FairsService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     await this.findOne(id);
     await this.prisma.fair.delete({
       where: { id },
     });
-    return { success: true };
   }
 }
