@@ -36,6 +36,9 @@ Thumbs.db
 # temp files
 .tmp-*
 
+# local worktrees, when created inside the repository by mistake
+.worktrees/
+
 # prisma
 prisma/*.db
 prisma/*.db-journal
