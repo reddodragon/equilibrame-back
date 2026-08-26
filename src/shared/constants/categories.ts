@@ -39,9 +39,27 @@ export const CATEGORY_SEEDS: readonly CategorySeed[] = [
     sortOrder: 5,
   },
   {
+    name: 'Velas',
+    slug: 'velas',
+    description: 'Velas aromáticas artesanales para acompañar cada ritual.',
+    sortOrder: 6,
+  },
+  {
+    name: 'Lámparas de Sal',
+    slug: 'lamparas-de-sal',
+    description: 'Lámparas de sal natural para crear ambientes cálidos.',
+    sortOrder: 7,
+  },
+  {
+    name: 'Home Sprays',
+    slug: 'home-sprays',
+    description: 'Brumas y aromas textiles para renovar los espacios.',
+    sortOrder: 8,
+  },
+  {
     name: 'Combos Emprendedores',
     slug: 'combos-emprendedores',
     description: 'Packs promocionales y combos exclusivos para revendedores.',
-    sortOrder: 6,
+    sortOrder: 9,
   },
 ] as const;

@@ -6,6 +6,7 @@ import { PrismaClient } from '../src/generated/prisma/client';
 import { AuthProvider, UserRole } from '../src/generated/prisma/enums';
 import { resolveDatabaseUrl } from '../src/config/database-url';
 import { CATEGORY_SEEDS } from '../src/shared/constants/categories';
+import { PRODUCT_SEEDS } from '../src/shared/constants/products';
 
 function getRequiredEnv(name: 'DATABASE_URL'): string {
   const value = process.env[name];
@@ -56,77 +57,70 @@ async function main() {
     },
   });
 
-  // 3. Seed Test Product with multiple images and variants
-  const homeFragCategory = await prisma.category.findUnique({
-    where: { slug: 'home-fragrances' },
-  });
-
-  if (homeFragCategory) {
-    const testProduct = await prisma.product.upsert({
-      where: { slug: 'aroma-textil-calma' },
+  // 3. Seed storefront products, variants and images
+  for (const productSeed of PRODUCT_SEEDS) {
+    const category = await prisma.category.findUniqueOrThrow({
+      where: { slug: productSeed.categorySlug },
+    });
+    const product = await prisma.product.upsert({
+      where: { slug: productSeed.id },
       update: {
-        description:
-          'Aromatizante para ropa y ambientes con notas suaves para equilibrar la rutina y favorecer el descanso.',
-        olfactoryFamily: 'AMADERADO',
-        categoryId: homeFragCategory.id,
-        isFeatured: true,
+        name: productSeed.name,
+        description: productSeed.description,
+        usageInstructions: productSeed.usageInstructions,
+        ritual: productSeed.ritual,
+        topNotes: productSeed.notes.top,
+        heartNotes: productSeed.notes.heart,
+        baseNotes: productSeed.notes.base,
+        olfactoryFamily: productSeed.olfactoryFamily,
+        categoryId: category.id,
+        isFeatured: productSeed.isFeatured ?? false,
         isActive: true,
       },
       create: {
-        id: 'aroma-textil-calma',
-        name: 'Aroma textil calma',
-        slug: 'aroma-textil-calma',
-        description:
-          'Aromatizante para ropa y ambientes con notas suaves para equilibrar la rutina y favorecer el descanso.',
-        olfactoryFamily: 'AMADERADO',
-        categoryId: homeFragCategory.id,
-        isFeatured: true,
+        id: productSeed.id,
+        slug: productSeed.id,
+        name: productSeed.name,
+        description: productSeed.description,
+        usageInstructions: productSeed.usageInstructions,
+        ritual: productSeed.ritual,
+        topNotes: productSeed.notes.top,
+        heartNotes: productSeed.notes.heart,
+        baseNotes: productSeed.notes.base,
+        olfactoryFamily: productSeed.olfactoryFamily,
+        categoryId: category.id,
+        isFeatured: productSeed.isFeatured ?? false,
         isActive: true,
       },
     });
 
     await prisma.productVariant.upsert({
-      where: { id: 'variant-calma-250ml' },
+      where: { id: `variant-${productSeed.id}` },
       update: {
-        price: 18900,
-        stock: 50,
+        format: productSeed.format,
+        price: productSeed.price,
+        stock: productSeed.stock,
+        sku: productSeed.sku,
+        isActive: true,
       },
       create: {
-        id: 'variant-calma-250ml',
-        productId: testProduct.id,
-        format: '250ml',
-        price: 18900,
-        stock: 50,
-        sku: 'CALMA-250',
+        id: `variant-${productSeed.id}`,
+        productId: product.id,
+        format: productSeed.format,
+        price: productSeed.price,
+        stock: productSeed.stock,
+        sku: productSeed.sku,
       },
     });
 
-    // Delete existing images to avoid duplication on re-run, and insert new test images
-    await prisma.productImage.deleteMany({
-      where: { productId: testProduct.id },
-    });
-
+    await prisma.productImage.deleteMany({ where: { productId: product.id } });
     await prisma.productImage.createMany({
-      data: [
-        {
-          productId: testProduct.id,
-          url: 'https://images.unsplash.com/photo-1635870224044-b508144c710c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-          alt: 'Aroma textil calma vista principal',
-          sortOrder: 0,
-        },
-        {
-          productId: testProduct.id,
-          url: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-          alt: 'Bruma de aromaterapia y relajación',
-          sortOrder: 1,
-        },
-        {
-          productId: testProduct.id,
-          url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-          alt: 'Detalle de ambiente de spa y bienestar',
-          sortOrder: 2,
-        },
-      ],
+      data: productSeed.images.map((url, sortOrder) => ({
+        productId: product.id,
+        url,
+        alt: `${productSeed.name} - imagen ${sortOrder + 1}`,
+        sortOrder,
+      })),
     });
   }
 

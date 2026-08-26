@@ -78,6 +78,11 @@ model Product {
   name            String
   slug            String          @unique
   description     String?
+  usageInstructions String?
+  ritual          String?
+  topNotes        String?
+  heartNotes      String?
+  baseNotes       String?
   olfactoryFamily OlfactoryFamily?
   categoryId      String
   category        Category        @relation(fields: [categoryId], references: [id])

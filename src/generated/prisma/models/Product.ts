@@ -29,6 +29,11 @@ export type ProductMinAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  usageInstructions: string | null
+  ritual: string | null
+  topNotes: string | null
+  heartNotes: string | null
+  baseNotes: string | null
   olfactoryFamily: $Enums.OlfactoryFamily | null
   categoryId: string | null
   isFeatured: boolean | null
@@ -43,6 +48,11 @@ export type ProductMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  usageInstructions: string | null
+  ritual: string | null
+  topNotes: string | null
+  heartNotes: string | null
+  baseNotes: string | null
   olfactoryFamily: $Enums.OlfactoryFamily | null
   categoryId: string | null
   isFeatured: boolean | null
@@ -57,6 +67,11 @@ export type ProductCountAggregateOutputType = {
   name: number
   slug: number
   description: number
+  usageInstructions: number
+  ritual: number
+  topNotes: number
+  heartNotes: number
+  baseNotes: number
   olfactoryFamily: number
   categoryId: number
   isFeatured: number
@@ -73,6 +88,11 @@ export type ProductMinAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  usageInstructions?: true
+  ritual?: true
+  topNotes?: true
+  heartNotes?: true
+  baseNotes?: true
   olfactoryFamily?: true
   categoryId?: true
   isFeatured?: true
@@ -87,6 +107,11 @@ export type ProductMaxAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  usageInstructions?: true
+  ritual?: true
+  topNotes?: true
+  heartNotes?: true
+  baseNotes?: true
   olfactoryFamily?: true
   categoryId?: true
   isFeatured?: true
@@ -101,6 +126,11 @@ export type ProductCountAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  usageInstructions?: true
+  ritual?: true
+  topNotes?: true
+  heartNotes?: true
+  baseNotes?: true
   olfactoryFamily?: true
   categoryId?: true
   isFeatured?: true
@@ -188,6 +218,11 @@ export type ProductGroupByOutputType = {
   name: string
   slug: string
   description: string | null
+  usageInstructions: string | null
+  ritual: string | null
+  topNotes: string | null
+  heartNotes: string | null
+  baseNotes: string | null
   olfactoryFamily: $Enums.OlfactoryFamily | null
   categoryId: string
   isFeatured: boolean
@@ -223,6 +258,11 @@ export type ProductWhereInput = {
   name?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringNullableFilter<"Product"> | string | null
+  usageInstructions?: Prisma.StringNullableFilter<"Product"> | string | null
+  ritual?: Prisma.StringNullableFilter<"Product"> | string | null
+  topNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  heartNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  baseNotes?: Prisma.StringNullableFilter<"Product"> | string | null
   olfactoryFamily?: Prisma.EnumOlfactoryFamilyNullableFilter<"Product"> | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFilter<"Product"> | string
   isFeatured?: Prisma.BoolFilter<"Product"> | boolean
@@ -240,6 +280,11 @@ export type ProductOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageInstructions?: Prisma.SortOrderInput | Prisma.SortOrder
+  ritual?: Prisma.SortOrderInput | Prisma.SortOrder
+  topNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  heartNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   olfactoryFamily?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -260,6 +305,11 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   name?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringNullableFilter<"Product"> | string | null
+  usageInstructions?: Prisma.StringNullableFilter<"Product"> | string | null
+  ritual?: Prisma.StringNullableFilter<"Product"> | string | null
+  topNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  heartNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  baseNotes?: Prisma.StringNullableFilter<"Product"> | string | null
   olfactoryFamily?: Prisma.EnumOlfactoryFamilyNullableFilter<"Product"> | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFilter<"Product"> | string
   isFeatured?: Prisma.BoolFilter<"Product"> | boolean
@@ -277,6 +327,11 @@ export type ProductOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageInstructions?: Prisma.SortOrderInput | Prisma.SortOrder
+  ritual?: Prisma.SortOrderInput | Prisma.SortOrder
+  topNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  heartNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   olfactoryFamily?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -297,6 +352,11 @@ export type ProductScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Product"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  usageInstructions?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  ritual?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  topNotes?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  heartNotes?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  baseNotes?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   olfactoryFamily?: Prisma.EnumOlfactoryFamilyNullableWithAggregatesFilter<"Product"> | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringWithAggregatesFilter<"Product"> | string
   isFeatured?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
@@ -311,6 +371,11 @@ export type ProductCreateInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -327,6 +392,11 @@ export type ProductUncheckedCreateInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   categoryId: string
   isFeatured?: boolean
@@ -343,6 +413,11 @@ export type ProductUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -359,6 +434,11 @@ export type ProductUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -375,6 +455,11 @@ export type ProductCreateManyInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   categoryId: string
   isFeatured?: boolean
@@ -389,6 +474,11 @@ export type ProductUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -402,6 +492,11 @@ export type ProductUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -426,6 +521,11 @@ export type ProductCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  usageInstructions?: Prisma.SortOrder
+  ritual?: Prisma.SortOrder
+  topNotes?: Prisma.SortOrder
+  heartNotes?: Prisma.SortOrder
+  baseNotes?: Prisma.SortOrder
   olfactoryFamily?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -440,6 +540,11 @@ export type ProductMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  usageInstructions?: Prisma.SortOrder
+  ritual?: Prisma.SortOrder
+  topNotes?: Prisma.SortOrder
+  heartNotes?: Prisma.SortOrder
+  baseNotes?: Prisma.SortOrder
   olfactoryFamily?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -454,6 +559,11 @@ export type ProductMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  usageInstructions?: Prisma.SortOrder
+  ritual?: Prisma.SortOrder
+  topNotes?: Prisma.SortOrder
+  heartNotes?: Prisma.SortOrder
+  baseNotes?: Prisma.SortOrder
   olfactoryFamily?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -547,6 +657,11 @@ export type ProductCreateWithoutCategoryInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -562,6 +677,11 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -606,6 +726,11 @@ export type ProductScalarWhereInput = {
   name?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringNullableFilter<"Product"> | string | null
+  usageInstructions?: Prisma.StringNullableFilter<"Product"> | string | null
+  ritual?: Prisma.StringNullableFilter<"Product"> | string | null
+  topNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  heartNotes?: Prisma.StringNullableFilter<"Product"> | string | null
+  baseNotes?: Prisma.StringNullableFilter<"Product"> | string | null
   olfactoryFamily?: Prisma.EnumOlfactoryFamilyNullableFilter<"Product"> | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFilter<"Product"> | string
   isFeatured?: Prisma.BoolFilter<"Product"> | boolean
@@ -620,6 +745,11 @@ export type ProductCreateWithoutVariantsInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -635,6 +765,11 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   categoryId: string
   isFeatured?: boolean
@@ -666,6 +801,11 @@ export type ProductUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -681,6 +821,11 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -696,6 +841,11 @@ export type ProductCreateWithoutImagesInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -711,6 +861,11 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   categoryId: string
   isFeatured?: boolean
@@ -742,6 +897,11 @@ export type ProductUpdateWithoutImagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -757,6 +917,11 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -772,6 +937,11 @@ export type ProductCreateManyCategoryInput = {
   name: string
   slug: string
   description?: string | null
+  usageInstructions?: string | null
+  ritual?: string | null
+  topNotes?: string | null
+  heartNotes?: string | null
+  baseNotes?: string | null
   olfactoryFamily?: $Enums.OlfactoryFamily | null
   isFeatured?: boolean
   isBestSeller?: boolean
@@ -785,6 +955,11 @@ export type ProductUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -800,6 +975,11 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -815,6 +995,11 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageInstructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ritual?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heartNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   olfactoryFamily?: Prisma.NullableEnumOlfactoryFamilyFieldUpdateOperationsInput | $Enums.OlfactoryFamily | null
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -868,6 +1053,11 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   slug?: boolean
   description?: boolean
+  usageInstructions?: boolean
+  ritual?: boolean
+  topNotes?: boolean
+  heartNotes?: boolean
+  baseNotes?: boolean
   olfactoryFamily?: boolean
   categoryId?: boolean
   isFeatured?: boolean
@@ -886,6 +1076,11 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   slug?: boolean
   description?: boolean
+  usageInstructions?: boolean
+  ritual?: boolean
+  topNotes?: boolean
+  heartNotes?: boolean
+  baseNotes?: boolean
   olfactoryFamily?: boolean
   categoryId?: boolean
   isFeatured?: boolean
@@ -901,6 +1096,11 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   slug?: boolean
   description?: boolean
+  usageInstructions?: boolean
+  ritual?: boolean
+  topNotes?: boolean
+  heartNotes?: boolean
+  baseNotes?: boolean
   olfactoryFamily?: boolean
   categoryId?: boolean
   isFeatured?: boolean
@@ -916,6 +1116,11 @@ export type ProductSelectScalar = {
   name?: boolean
   slug?: boolean
   description?: boolean
+  usageInstructions?: boolean
+  ritual?: boolean
+  topNotes?: boolean
+  heartNotes?: boolean
+  baseNotes?: boolean
   olfactoryFamily?: boolean
   categoryId?: boolean
   isFeatured?: boolean
@@ -925,7 +1130,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "olfactoryFamily" | "categoryId" | "isFeatured" | "isBestSeller" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "usageInstructions" | "ritual" | "topNotes" | "heartNotes" | "baseNotes" | "olfactoryFamily" | "categoryId" | "isFeatured" | "isBestSeller" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Product$variantsArgs<ExtArgs>
@@ -951,6 +1156,11 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     slug: string
     description: string | null
+    usageInstructions: string | null
+    ritual: string | null
+    topNotes: string | null
+    heartNotes: string | null
+    baseNotes: string | null
     olfactoryFamily: $Enums.OlfactoryFamily | null
     categoryId: string
     isFeatured: boolean
@@ -1388,6 +1598,11 @@ export interface ProductFieldRefs {
   readonly name: Prisma.FieldRef<"Product", 'String'>
   readonly slug: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
+  readonly usageInstructions: Prisma.FieldRef<"Product", 'String'>
+  readonly ritual: Prisma.FieldRef<"Product", 'String'>
+  readonly topNotes: Prisma.FieldRef<"Product", 'String'>
+  readonly heartNotes: Prisma.FieldRef<"Product", 'String'>
+  readonly baseNotes: Prisma.FieldRef<"Product", 'String'>
   readonly olfactoryFamily: Prisma.FieldRef<"Product", 'OlfactoryFamily'>
   readonly categoryId: Prisma.FieldRef<"Product", 'String'>
   readonly isFeatured: Prisma.FieldRef<"Product", 'Boolean'>
