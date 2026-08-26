@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import type { Prisma } from '../../generated/prisma/client';
 import { OlfactoryFamily } from '../../generated/prisma/enums';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -194,6 +194,21 @@ describe('ProductsService', () => {
       where: { id: product.id },
       data: { isActive: false },
     });
+  });
+
+  it('rejects products without an active variant', async () => {
+    const { service } = createService();
+
+    await expect(
+      service.create({
+        name: 'Producto inactivo',
+        slug: 'producto-inactivo',
+        categoryId: 'category-1',
+        variants: [
+          { format: '100ml', price: '1000', stock: 0, isActive: false },
+        ],
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
   });
 
   it('rejects deleting a missing product', async () => {

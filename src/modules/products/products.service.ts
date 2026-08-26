@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { rethrowPrismaWriteError } from '../../common/errors/prisma-write-error';
@@ -142,6 +146,7 @@ export class ProductsService {
 
   async create(dto: CreateProductDto) {
     const { categoryId, variants, images = [], ...productData } = dto;
+    this.assertHasActiveVariant(variants);
     const variantData = variants.map(({ id: variantId, ...variant }) => {
       void variantId;
       return variant;
@@ -176,6 +181,9 @@ export class ProductsService {
         }
 
         const { categoryId, variants, images, ...productData } = dto;
+        if (variants) {
+          this.assertHasActiveVariant(variants);
+        }
         await transaction.product.update({
           where: { id },
           data: {
@@ -195,10 +203,15 @@ export class ProductsService {
           for (const variant of variants) {
             const { id: variantId, ...variantData } = variant;
             if (variantId) {
-              await transaction.productVariant.updateMany({
+              const result = await transaction.productVariant.updateMany({
                 where: { id: variantId, productId: id },
                 data: variantData,
               });
+              if (result.count === 0) {
+                throw new BadRequestException(
+                  `La variante ${variantId} no pertenece al producto ${id}.`,
+                );
+              }
             } else {
               await transaction.productVariant.create({
                 data: { ...variantData, productId: id },
@@ -294,5 +307,15 @@ export class ProductsService {
             : Number(variant.priceWholesale),
       })),
     };
+  }
+
+  private assertHasActiveVariant(
+    variants: ReadonlyArray<{ isActive?: boolean }>,
+  ): void {
+    if (!variants.some((variant) => variant.isActive !== false)) {
+      throw new BadRequestException(
+        'El producto debe conservar al menos una variante activa.',
+      );
+    }
   }
 }
