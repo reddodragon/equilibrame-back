@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { rethrowPrismaWriteError } from '../../common/errors/prisma-write-error';
 import { FindProductsQueryDto } from './dto/find-products-query.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import {
   getOlfactoryFamily,
   getScentProfile,
@@ -21,8 +24,24 @@ const PRODUCT_INCLUDE = {
   },
 } satisfies Prisma.ProductInclude;
 
+const ADMIN_PRODUCT_INCLUDE = {
+  category: {
+    select: { id: true, name: true, slug: true },
+  },
+  variants: {
+    orderBy: { price: 'asc' },
+  },
+  images: {
+    orderBy: { sortOrder: 'asc' },
+  },
+} satisfies Prisma.ProductInclude;
+
 type ProductWithRelations = Prisma.ProductGetPayload<{
   include: typeof PRODUCT_INCLUDE;
+}>;
+
+type AdminProductWithRelations = Prisma.ProductGetPayload<{
+  include: typeof ADMIN_PRODUCT_INCLUDE;
 }>;
 
 @Injectable()
@@ -99,6 +118,134 @@ export class ProductsService {
     };
   }
 
+  async findAllAdmin() {
+    const products = await this.prisma.product.findMany({
+      include: ADMIN_PRODUCT_INCLUDE,
+      orderBy: { name: 'asc' },
+    });
+
+    return products.map((product) => this.toAdminResponse(product));
+  }
+
+  async findOneAdmin(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: ADMIN_PRODUCT_INCLUDE,
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Producto ${id} no encontrado.`);
+    }
+
+    return this.toAdminResponse(product);
+  }
+
+  async create(dto: CreateProductDto) {
+    const { categoryId, variants, images = [], ...productData } = dto;
+    const variantData = variants.map(({ id: variantId, ...variant }) => {
+      void variantId;
+      return variant;
+    });
+    try {
+      const product = await this.prisma.product.create({
+        data: {
+          ...productData,
+          category: { connect: { id: categoryId } },
+          variants: { create: variantData },
+          images: { create: images },
+        },
+        include: ADMIN_PRODUCT_INCLUDE,
+      });
+
+      return this.toAdminResponse(product);
+    } catch (error: unknown) {
+      rethrowPrismaWriteError(error, 'El producto');
+    }
+  }
+
+  async update(id: string, dto: UpdateProductDto) {
+    try {
+      const product = await this.prisma.$transaction(async (transaction) => {
+        const existing = await transaction.product.findUnique({
+          where: { id },
+          select: { id: true },
+        });
+
+        if (!existing) {
+          throw new NotFoundException(`Producto ${id} no encontrado.`);
+        }
+
+        const { categoryId, variants, images, ...productData } = dto;
+        await transaction.product.update({
+          where: { id },
+          data: {
+            ...productData,
+            ...(categoryId
+              ? { category: { connect: { id: categoryId } } }
+              : {}),
+          },
+        });
+
+        if (variants) {
+          await transaction.productVariant.updateMany({
+            where: { productId: id },
+            data: { isActive: false },
+          });
+
+          for (const variant of variants) {
+            const { id: variantId, ...variantData } = variant;
+            if (variantId) {
+              await transaction.productVariant.updateMany({
+                where: { id: variantId, productId: id },
+                data: variantData,
+              });
+            } else {
+              await transaction.productVariant.create({
+                data: { ...variantData, productId: id },
+              });
+            }
+          }
+        }
+
+        if (images) {
+          await transaction.productImage.deleteMany({
+            where: { productId: id },
+          });
+          if (images.length > 0) {
+            await transaction.productImage.createMany({
+              data: images.map((image) => ({ ...image, productId: id })),
+            });
+          }
+        }
+
+        return transaction.product.findUniqueOrThrow({
+          where: { id },
+          include: ADMIN_PRODUCT_INCLUDE,
+        });
+      });
+
+      return this.toAdminResponse(product);
+    } catch (error: unknown) {
+      rethrowPrismaWriteError(error, 'El producto');
+    }
+  }
+
+  async remove(id: string): Promise<void> {
+    const existing = await this.prisma.product.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Producto ${id} no encontrado.`);
+    }
+
+    await this.prisma.product.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
+
   private toResponse(product: ProductWithRelations) {
     const variant = product.variants[0];
     const images = product.images.map(({ url }) => url);
@@ -128,6 +275,24 @@ export class ProductsService {
       isFeatured: product.isFeatured,
       isBestSeller: product.isBestSeller,
       stock: variant.stock,
+    };
+  }
+
+  private toAdminResponse(product: AdminProductWithRelations) {
+    return {
+      ...product,
+      variants: product.variants.map((variant) => ({
+        ...variant,
+        price: Number(variant.price),
+        priceEntrepreneur:
+          variant.priceEntrepreneur === null
+            ? null
+            : Number(variant.priceEntrepreneur),
+        priceWholesale:
+          variant.priceWholesale === null
+            ? null
+            : Number(variant.priceWholesale),
+      })),
     };
   }
 }

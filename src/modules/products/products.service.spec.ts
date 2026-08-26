@@ -68,11 +68,20 @@ describe('ProductsService', () => {
       void args;
       return Promise.resolve<typeof product | null>(product);
     });
+    const create = jest.fn((args: Prisma.ProductCreateArgs) => {
+      void args;
+      return Promise.resolve(product);
+    });
+    const findUnique = jest.fn().mockResolvedValue({ id: product.id });
+    const update = jest.fn().mockResolvedValue(product);
     const prisma = {
       product: {
         findMany,
         count,
         findFirst,
+        create,
+        findUnique,
+        update,
       },
     };
 
@@ -129,6 +138,69 @@ describe('ProductsService', () => {
     prisma.product.findFirst.mockResolvedValueOnce(null);
 
     await expect(service.findOne('missing')).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
+  });
+
+  it('creates an admin product with nested variants and images', async () => {
+    const { prisma, service } = createService();
+
+    const result = await service.create({
+      name: 'Aroma textil calma',
+      slug: 'aroma-textil-calma',
+      categoryId: 'category-1',
+      variants: [
+        { format: '250ml', price: '18900', stock: 50, sku: 'CALMA-250' },
+      ],
+      images: [{ url: 'https://example.com/calma.jpg', sortOrder: 0 }],
+    });
+
+    expect(prisma.product.create.mock.calls[0]?.[0]).toEqual({
+      data: {
+        name: 'Aroma textil calma',
+        slug: 'aroma-textil-calma',
+        category: { connect: { id: 'category-1' } },
+        variants: {
+          create: [
+            {
+              format: '250ml',
+              price: '18900',
+              stock: 50,
+              sku: 'CALMA-250',
+            },
+          ],
+        },
+        images: {
+          create: [{ url: 'https://example.com/calma.jpg', sortOrder: 0 }],
+        },
+      },
+      include: {
+        category: { select: { id: true, name: true, slug: true } },
+        variants: {
+          orderBy: { price: 'asc' },
+        },
+        images: { orderBy: { sortOrder: 'asc' } },
+      },
+    });
+    expect(result.variants[0]?.price).toBe(18900);
+  });
+
+  it('soft deletes an existing product', async () => {
+    const { prisma, service } = createService();
+
+    await service.remove(product.id);
+
+    expect(prisma.product.update).toHaveBeenCalledWith({
+      where: { id: product.id },
+      data: { isActive: false },
+    });
+  });
+
+  it('rejects deleting a missing product', async () => {
+    const { prisma, service } = createService();
+    prisma.product.findUnique.mockResolvedValueOnce(null);
+
+    await expect(service.remove('missing')).rejects.toBeInstanceOf(
       NotFoundException,
     );
   });
