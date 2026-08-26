@@ -395,7 +395,8 @@ export const ModelName = {
   ShippingRate: 'ShippingRate',
   FeaturedSection: 'FeaturedSection',
   Combo: 'Combo',
-  ComboItem: 'ComboItem'
+  ComboItem: 'ComboItem',
+  Fair: 'Fair'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "product" | "productVariant" | "productImage" | "address" | "shippingZone" | "shippingMethod" | "shippingRate" | "featuredSection" | "combo" | "comboItem"
+    modelProps: "user" | "category" | "product" | "productVariant" | "productImage" | "address" | "shippingZone" | "shippingMethod" | "shippingRate" | "featuredSection" | "combo" | "comboItem" | "fair"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1303,6 +1304,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Fair: {
+      payload: Prisma.$FairPayload<ExtArgs>
+      fields: Prisma.FairFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FairFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FairFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        findFirst: {
+          args: Prisma.FairFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FairFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        findMany: {
+          args: Prisma.FairFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>[]
+        }
+        create: {
+          args: Prisma.FairCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        createMany: {
+          args: Prisma.FairCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FairCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>[]
+        }
+        delete: {
+          args: Prisma.FairDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        update: {
+          args: Prisma.FairUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        deleteMany: {
+          args: Prisma.FairDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FairUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FairUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>[]
+        }
+        upsert: {
+          args: Prisma.FairUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FairPayload>
+        }
+        aggregate: {
+          args: Prisma.FairAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFair>
+        }
+        groupBy: {
+          args: Prisma.FairGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FairGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FairCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FairCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1527,6 +1602,22 @@ export const ComboItemScalarFieldEnum = {
 } as const
 
 export type ComboItemScalarFieldEnum = (typeof ComboItemScalarFieldEnum)[keyof typeof ComboItemScalarFieldEnum]
+
+
+export const FairScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  date: 'date',
+  location: 'location',
+  hours: 'hours',
+  description: 'description',
+  tag: 'tag',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FairScalarFieldEnum = (typeof FairScalarFieldEnum)[keyof typeof FairScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1813,6 +1904,7 @@ export type GlobalOmitConfig = {
   featuredSection?: Prisma.FeaturedSectionOmit
   combo?: Prisma.ComboOmit
   comboItem?: Prisma.ComboItemOmit
+  fair?: Prisma.FairOmit
 }
 
 /* Types for Logging */

@@ -62,7 +62,8 @@ export const ModelName = {
   ShippingRate: 'ShippingRate',
   FeaturedSection: 'FeaturedSection',
   Combo: 'Combo',
-  ComboItem: 'ComboItem'
+  ComboItem: 'ComboItem',
+  Fair: 'Fair'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -266,6 +267,22 @@ export const ComboItemScalarFieldEnum = {
 } as const
 
 export type ComboItemScalarFieldEnum = (typeof ComboItemScalarFieldEnum)[keyof typeof ComboItemScalarFieldEnum]
+
+
+export const FairScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  date: 'date',
+  location: 'location',
+  hours: 'hours',
+  description: 'description',
+  tag: 'tag',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FairScalarFieldEnum = (typeof FairScalarFieldEnum)[keyof typeof FairScalarFieldEnum]
 
 
 export const SortOrder = {

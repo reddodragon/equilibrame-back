@@ -99,3 +99,8 @@ export type Combo = Prisma.ComboModel
  * 
  */
 export type ComboItem = Prisma.ComboItemModel
+/**
+ * Model Fair
+ * 
+ */
+export type Fair = Prisma.FairModel

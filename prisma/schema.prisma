@@ -239,3 +239,18 @@ model ComboItem {
   @@unique([comboId, variantId])
   @@index([comboId])
 }
+
+// ─── Ferias y Eventos ──────────────────────────────
+model Fair {
+  id          String   @id @default(cuid())
+  title       String
+  date        String
+  location    String
+  hours       String
+  description String
+  tag         String
+  imageUrl    String?  // flyer de la feria
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
