@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
+import { AdminAccessController } from './admin-access.controller';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -20,7 +21,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     }),
     JwtModule.register({}),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, AdminAccessController],
   providers: [
     AuthService,
     LocalStrategy,
