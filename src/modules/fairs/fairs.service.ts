@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateFairDto } from './dto/create-fair.dto';
 import { UpdateFairDto } from './dto/update-fair.dto';
+import { rethrowPrismaWriteError } from '../../common/errors/prisma-write-error';
 
 @Injectable()
 export class FairsService {
@@ -24,23 +25,26 @@ export class FairsService {
   }
 
   async create(dto: CreateFairDto) {
-    return this.prisma.fair.create({
-      data: dto,
-    });
+    try {
+      return await this.prisma.fair.create({ data: dto });
+    } catch (error) {
+      rethrowPrismaWriteError(error, 'Feria');
+    }
   }
 
   async update(id: string, dto: UpdateFairDto) {
-    await this.findOne(id);
-    return this.prisma.fair.update({
-      where: { id },
-      data: dto,
-    });
+    try {
+      return await this.prisma.fair.update({ where: { id }, data: dto });
+    } catch (error) {
+      rethrowPrismaWriteError(error, 'Feria');
+    }
   }
 
   async remove(id: string): Promise<void> {
-    await this.findOne(id);
-    await this.prisma.fair.delete({
-      where: { id },
-    });
+    try {
+      await this.prisma.fair.delete({ where: { id } });
+    } catch (error) {
+      rethrowPrismaWriteError(error, 'Feria');
+    }
   }
 }

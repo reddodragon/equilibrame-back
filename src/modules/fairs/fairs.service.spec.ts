@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { FairsService } from './fairs.service';
+import { Prisma } from '../../generated/prisma/client';
 
 describe('FairsService', () => {
   const fair = {
@@ -52,26 +53,52 @@ describe('FairsService', () => {
     );
   });
 
-  it('checks existence before updating', async () => {
+  it('updates atomically without a separate existence check', async () => {
     const { prisma, service } = createService();
 
     await service.update('fair-1', { title: 'Nueva feria' });
 
-    expect(prisma.fair.findUnique).toHaveBeenCalledWith({
-      where: { id: 'fair-1' },
-    });
+    expect(prisma.fair.findUnique).not.toHaveBeenCalled();
     expect(prisma.fair.update).toHaveBeenCalledWith({
       where: { id: 'fair-1' },
       data: { title: 'Nueva feria' },
     });
   });
 
-  it('checks existence before deleting', async () => {
+  it('deletes atomically without a separate existence check', async () => {
     const { prisma, service } = createService();
 
     await expect(service.remove('fair-1')).resolves.toBeUndefined();
+    expect(prisma.fair.findUnique).not.toHaveBeenCalled();
     expect(prisma.fair.delete).toHaveBeenCalledWith({
       where: { id: 'fair-1' },
     });
+  });
+
+  it.each(['update', 'remove'] as const)(
+    'maps missing/concurrently removed fairs to 404 on %s',
+    async (operation) => {
+      const { prisma, service } = createService();
+      const write =
+        operation === 'update' ? prisma.fair.update : prisma.fair.delete;
+      write.mockRejectedValueOnce(
+        new Prisma.PrismaClientKnownRequestError('Record not found', {
+          code: 'P2025',
+          clientVersion: '7',
+        }),
+      );
+      const result =
+        operation === 'update'
+          ? service.update('missing', { title: 'New title' })
+          : service.remove('missing');
+      await expect(result).rejects.toBeInstanceOf(NotFoundException);
+    },
+  );
+
+  it('does not mislabel unexpected database failures as missing records', async () => {
+    const { prisma, service } = createService();
+    const error = new Error('Database unavailable');
+    prisma.fair.update.mockRejectedValueOnce(error);
+    await expect(service.update('fair-1', {})).rejects.toBe(error);
   });
 });
