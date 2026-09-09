@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import { PrismaClient } from '../src/generated/prisma/client';
 import { AuthProvider, UserRole } from '../src/generated/prisma/enums';
 import { resolveDatabaseUrl } from '../src/config/database-url';
+import { getDemoSeedOptions } from '../src/config/demo-seed';
 import { CATEGORY_SEEDS } from '../src/shared/constants/categories';
 import { PRODUCT_SEEDS } from '../src/shared/constants/products';
 
@@ -17,6 +18,8 @@ function getRequiredEnv(name: 'DATABASE_URL'): string {
 
   return value;
 }
+
+const seedOptions = getDemoSeedOptions(process.env);
 
 const pool = new Pool({
   connectionString: resolveDatabaseUrl(
@@ -41,21 +44,25 @@ async function main() {
     });
   }
 
-  const adminPasswordHash = await bcrypt.hash('admin123', 10);
-
-  await prisma.user.upsert({
-    where: { email: 'admin@equli.com' },
-    update: {},
-    create: {
-      email: 'admin@equli.com',
-      passwordHash: adminPasswordHash,
-      firstName: 'Admin',
-      lastName: 'Equli',
-      role: UserRole.ADMIN,
-      provider: AuthProvider.LOCAL,
-      isEmailVerified: true,
-    },
-  });
+  // Optional demo account; never ship a shared/default administrator password.
+  // Existing accounts are deliberately left unchanged.
+  if (seedOptions.admin) {
+    const { email, password } = seedOptions.admin;
+    const passwordHash = await bcrypt.hash(password, 10);
+    await prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
+        email,
+        passwordHash,
+        firstName: 'Admin',
+        lastName: 'Equli',
+        role: UserRole.ADMIN,
+        provider: AuthProvider.LOCAL,
+        isEmailVerified: true,
+      },
+    });
+  }
 
   // 3. Seed storefront products, variants and images
   for (const productSeed of PRODUCT_SEEDS) {
