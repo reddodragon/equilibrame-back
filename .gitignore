@@ -30,8 +30,17 @@ Thumbs.db
 !.vscode/extensions.json
 
 # env
-.env
-.env.local
+.env*
+!.env*.example
+# Local credentials, database exports and user uploads are not source code.
+*.pem
+*.key
+*.p12
+*.pfx
+*.dump
+*.sql.gz
+/uploads/
+*.tsbuildinfo
 
 # temp files
 .tmp-*

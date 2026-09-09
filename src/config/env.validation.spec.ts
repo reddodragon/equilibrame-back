@@ -4,7 +4,7 @@ describe('validateEnv', () => {
   const validEnv = {
     PORT: '3001',
     DATABASE_URL: 'postgresql://postgres@localhost:5432/equli?schema=public',
-    DATABASE_PASS: 'masterkey',
+    DATABASE_PASS: 'unit-test-db-password',
     JWT_SECRET: 'super-secret-jwt-key-replace-in-production',
     JWT_REFRESH_SECRET: 'super-secret-refresh-key-replace-in-production',
     GOOGLE_CLIENT_ID: 'google-client-id',
