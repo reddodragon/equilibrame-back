@@ -6,18 +6,19 @@ Plan acordado el 9 de septiembre de 2026. Implementar por unidades verificables;
 
 | Perfil visible | Valor técnico | Permisos iniciales |
 | --- | --- | --- |
-| Usuario | `USER` | Consultar catálogo público y sus filtros. |
+| Usuario | `USER` | Catálogo y filtros; carrito persistente y panel personal previstos. |
 | Revendedor | `ENTREPRENEUR` | Catálogo y capacidades reservadas para combos/encargos propios. |
-| Empleado | `EMPLOYEE` | Solo catálogo por ahora; tareas operativas por confirmar. |
 | Administrador | `ADMIN` | Gestión de catálogo, usuarios, contenido, encargos y lectura de métricas. |
 
 Los permisos de funciones futuras son una política preparada, no endpoints implementados. No se renombra ENTREPRENEUR: conservarlo evita migrar cuentas existentes solo para cambiar la etiqueta.
+
+Alcance corregido: únicamente usuario, administrador y revendedor. No existe un rol empleado.
 
 - Política centralizada en el backend y guard global. Roles desconocidos e inactivos no acceden a recursos administrativos.
 - El JWT identifica al usuario; la API obtiene su rol actual de la base en cada solicitud. Cambiar el rol no debe depender de esperar que venza el token.
 - El front consulta `GET /api/admin/access` antes de mostrar el panel. Ocultar UI no reemplaza la autorización del servidor.
 - Registro local y Google siguen creando USER. Un formulario público nunca asigna roles privilegiados.
-- Migración aditiva `20260909043000_add_employee_role` preparada, **todavía no aplicada**. Revisar destino y backup, aplicar antes de asignar EMPLOYEE en la base. No se ejecutó seed.
+- Se retiró la migración de empleado tras comprobar que no había sido aplicada localmente. No se modificaron cuentas ni datos. Si otra instalación aplicó esa revisión anterior, revisar su esquema antes de desplegar; no reescribir su historial de migraciones automáticamente.
 - Pruebas HTTP reales con persistencia simulada: visitante 401, perfiles no administradores 403, ADMIN 200, desactivación y cambio de rol efectivos con tokens anteriores.
 
 ## 2. CRUD administrativo de usuarios — siguiente unidad
@@ -29,7 +30,21 @@ Los permisos de funciones futuras son una política preparada, no endpoints impl
 5. Proteger al último administrador activo, incluso con solicitudes concurrentes: transacción con serialización/reintento o bloqueo consistente. No basta contar administradores antes de actualizar.
 6. Probar autoescalada, acceso a cuentas ajenas, último administrador, revocación y reactivación.
 
-**Pendiente de definición:** tareas exactas del empleado. No se le concederá acceso al CRUD de usuarios ni a métricas por inferencia.
+## 2 bis. Carrito persistente y panel del usuario — nuevo alcance
+
+El carrito actual solo usa estado Zustand en memoria: todavía no persiste al recargar ni se sincroniza entre dispositivos. Implementar esta unidad antes del flujo de compras completo.
+
+1. **Carrito de visitante:** persistencia local versionada y compatible con hidratación; validar y recuperar almacenamiento corrupto sin romper la tienda.
+2. **Carrito de cuenta:** Cart/CartItem asociados al usuario, con `variantId` y cantidad. Persistencia en DB y sincronización entre sesiones/dispositivos; no confundirlo con el carrito anónimo.
+3. **Inicio/cierre de sesión:** fusión explícita y sin duplicar cantidades ante reintentos; aislar cuentas en equipos compartidos y limpiar caché privada al salir. No descontar stock al agregar al carrito. Revalidar disponibilidad y precios en servidor.
+4. **Mi cuenta:** panel protegido con datos personales y direcciones de entrega. Actualizar únicamente campos permitidos; el usuario no puede cambiar su rol, estado de verificación o privilegios.
+5. **Mis compras:** listado paginado y detalle de pedidos propios con productos/presentaciones, importes y fechas. Depende del modelo de pedido/venta; no poblar con encargos de otros usuarios ni compras ficticias.
+6. **Mis envíos:** estado del pedido, despacho y seguimiento cuando exista. Sin integración logística, mostrar que no hay seguimiento disponible; nunca inventar eventos del transportista. Preparar contrato para estado manual identificado e integración futura, manteniendo envíos externos pendientes.
+7. **Eliminar mi cuenta:** confirmación explícita y reautenticación reciente (también para cuentas Google), revocación de sesiones, eliminación del carrito y limpieza de datos personales. Definir antes de implementar el tratamiento de pedidos abiertos y qué registros de compra requieren anonimización/conservación según la política aplicable; no prometer borrado total y ejecutar solo una desactivación oculta. Proteger también al último administrador activo.
+
+Todas las rutas de autoservicio obtienen la identidad de la sesión; nunca confían en un `userId` arbitrario del cliente. No es necesario sumar otro rol para este panel.
+
+**Aceptación:** el carrito sobrevive recarga/reinicio de sesión y se recupera desde otro dispositivo; las cuentas A/B no mezclan datos; una cuenta no puede leer pedidos ni envíos ajenos; eliminar cuenta exige confirmación y vuelve inválidas sus sesiones. Estas funciones están planificadas, todavía no implementadas.
 
 ## 3. Productos y categorías — ampliar la API existente y conectar panel
 
@@ -97,4 +112,4 @@ Antes del VPS: rotar credenciales locales/de ejemplo, configurar secretos de des
 
 ## Estado de esta entrega
 
-Completado: base de permisos, migración preparada, acceso administrativo y pruebas. Los CRUD de usuarios, UI del catálogo, variantes con imagen, secciones, encargos y métricas permanecen pendientes. No confundir el panel inicial con esos módulos ya implementados.
+Completado: base de permisos para tres roles, acceso administrativo y pruebas. Los CRUD de usuarios, carrito persistente, panel personal (compras/envíos/datos/eliminación), UI del catálogo, variantes con imagen, secciones, encargos y métricas permanecen pendientes. No confundir el panel inicial con esos módulos ya implementados.

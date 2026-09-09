@@ -1,4 +1,5 @@
 import { getPermissions, hasPermission, Permission } from './permissions';
+import { UserRole } from '../../generated/prisma/enums';
 
 describe('role permissions', () => {
   it.each(['USER', 'EMPLOYEE', 'ENTREPRENEUR'])(
@@ -15,8 +16,13 @@ describe('role permissions', () => {
     }
   });
 
-  it('gives employees only public catalog access until their duties are defined', () => {
-    expect(getPermissions('EMPLOYEE')).toEqual([Permission.CATALOG_READ]);
+  it('defines exactly the three supported roles and rejects employee', () => {
+    expect(Object.values(UserRole).sort()).toEqual([
+      'ADMIN',
+      'ENTREPRENEUR',
+      'USER',
+    ]);
+    expect(getPermissions('EMPLOYEE')).toEqual([]);
   });
 
   it('reserves reseller capabilities for validated reseller/admin roles', () => {

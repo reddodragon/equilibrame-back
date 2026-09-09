@@ -15,8 +15,6 @@ export type Permission = (typeof Permission)[keyof typeof Permission];
 
 const rolePermissions: Record<UserRole, readonly Permission[]> = {
   USER: [Permission.CATALOG_READ],
-  // No elevated permissions until employee duties are explicitly defined.
-  EMPLOYEE: [Permission.CATALOG_READ],
   ENTREPRENEUR: [
     Permission.CATALOG_READ,
     Permission.RESELLER_ACCESS,
